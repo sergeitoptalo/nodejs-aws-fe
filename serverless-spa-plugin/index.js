@@ -5,7 +5,6 @@ const spawnSync = require('child_process').spawnSync;
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless;
-    console.log('SERVERLESS', this.serverless.variables.service.provider);
     this.options = options;
     this.commands = {
       syncToS3: {
@@ -46,7 +45,7 @@ class ServerlessPlugin {
     if (this.serverless.variables.service.provider.profile) {
       args.unshift('--profile', `${this.serverless.variables.service.provider.profile}`);
     }
-console.log('COMMAND', command, args.toString());
+
     const result = spawnSync(command, args);
     const stdout = result.stdout.toString();
     const sterr = result.stderr.toString();
