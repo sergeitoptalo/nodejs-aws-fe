@@ -16,7 +16,6 @@ provider:
   runtime: nodejs12.x
   stage: dev
   region: eu-west-1
-  ## this is my personal AWS account. This must be skipped in you serverless.yml
 
 plugins:
   - serverless-finch
