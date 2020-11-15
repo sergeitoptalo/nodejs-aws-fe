@@ -44,7 +44,6 @@ const Form = (props: FormikProps<FormikValues>) => {
             label="Title"
             fullWidth
             autoComplete="off"
-            required
           />
         </Grid>
         <Grid item xs={12}>
@@ -102,23 +101,28 @@ const emptyValues: any = ProductSchema.cast();
 
 export default function PageProductForm() {
   const history = useHistory();
-  const {id} = useParams();
+  const {id} = useParams<{id: string}>();
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const onSubmit = (values: FormikValues) => {
     const formattedValues = ProductSchema.cast(values);
     const productToSave = id ? {...ProductSchema.cast(formattedValues), id} : formattedValues;
-    axios.put(`${API_PATHS.bff}/product`, productToSave)
+    if (id) {
+      axios.put(`${API_PATHS.bff}/products`, productToSave)
+      .then(() => history.push('/admin/products'))
+    } else {
+      axios.post(`${API_PATHS.bff}/products`, productToSave)
       .then(() => history.push('/admin/products'));
-  };
+    };
+  }
 
   useEffect(() => {
     if (!id) {
       setIsLoading(false);
       return;
     }
-    axios.get(`${API_PATHS.bff}/product/${id}`)
+    axios.get(`${API_PATHS.bff}/products/${id}`)
       .then(res => {
         setProduct(res.data);
         setIsLoading(false);
