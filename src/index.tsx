@@ -8,6 +8,8 @@ import * as serviceWorker from './serviceWorker';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import axios from 'axios';
 
+localStorage.setItem('authorization_token', '');
+
 axios.interceptors.response.use(
   response => {
     return response;
@@ -16,7 +18,12 @@ axios.interceptors.response.use(
     if (error.response.status === 400) {
       alert(error.response.data?.data);
     }
-    return Promise.reject(error.response);
+
+    const status = error.response?.status;
+    if (status === 401 || status === 403) {
+      alert(error.response.data?.message);
+    }
+    return Promise.reject(error);
   }
 );
 
